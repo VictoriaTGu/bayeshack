@@ -74,11 +74,13 @@ def ask_next_question():
     )
 
 def fill_queue():
+    global question_queue
     for attribute, question in reversed(QUESTIONS):
         question_queue.put((attribute,question))
 
 
 def main():
+    global question_queue
     fill_queue()
     attribute, question = question_queue.get()
     ask_question(
