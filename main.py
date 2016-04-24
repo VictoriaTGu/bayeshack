@@ -60,6 +60,7 @@ def store_attribute(text):
 def ask_next_question():
     sys.stderr.write('ask next question\n')
     if question_queue.empty():
+        sys.stderr.write('question queue empty\n')
         return
     attribute, question = question_queue.get()
     global CURRENT_ATTRIBUTE
