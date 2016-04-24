@@ -77,19 +77,21 @@ def ask_next_question():
 def fill_queue(queue):
     for attribute, question in reversed(QUESTIONS):
         queue.put((attribute,question))
+    sys.stderr.write(str(queue.qsize()) + '\n')
     return queue
 
 
 def main():
     global question_queue
-    question_queue = fill_queue()
-    attribute, question = question_queue.get()
-    ask_question(
-        attribute,
-        question,
-        SENDER_ID,
-        USER_PROFILE
-    )
+    # question_queue = fill_queue()
+    # attribute, question = question_queue.get()
+    for attribute, question in QUESTIONS:
+        ask_question(
+            attribute,
+            question,
+            SENDER_ID,
+            USER_PROFILE
+        )
     app.run(debug=True)
 
 
