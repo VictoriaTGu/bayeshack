@@ -7,7 +7,6 @@ import sys
 import traceback
 from Queue import Queue as FifoQueue
 from utils import ask_question
-from utils import wait_for_response
 from utils import sendTextMessage
 
 app = Flask(__name__)
@@ -15,13 +14,14 @@ q = Queue(connection=conn)
 question_queue = FifoQueue()
 
 QUESTIONS = [
+    ('intro', 'Hi, to start I will need a few details'),
     ('city','What city do you live in?'),
     ('job','What do you do for a living?'),
     ('experience','How many years of experience do you have in that job?'),
     ('education','Education? ("Less Than High School", "High School" , "Some College", "College", "Advanced")'),
     ('gender','What gender do you identify as?'),
 ]
-CURRENT_ATTRIBUTE=None
+CURRENT_ATTRIBUTE='intro'
 USER_PROFILE = {}
 SENDER_ID=1020675814687539
 
@@ -58,6 +58,7 @@ def store_attribute(text):
     sys.stderr.write(str(USER_PROFILE) + '\n')
 
 def ask_next_question():
+    sys.stderr.write('ask next question\n')
     if question_queue.empty():
         return
     attribute, question = question_queue.get()
@@ -79,7 +80,13 @@ def fill_queue():
 
 def main():
     fill_queue()
-    q.enqueue(wait_for_response)
+    attribute, question = question_queue.get()
+    ask_next_question(
+        attribute,
+        question,
+        SENDER_ID,
+        USER_PROFILE
+    )
     app.run(debug=True)
 
 
