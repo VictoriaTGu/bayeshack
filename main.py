@@ -41,21 +41,19 @@ def validate():
             sys.stderr.write(str(messaging_events) + '\n')
             for event in messages:
                 if (event.get('message') and event['message']['text']):
-                    if event['message'].get('mid') is None:
-                        text = event['message']['text']
-                        sendTextMessage(SENDER_ID, text + ' received, Thank you!')
-                        # Handle a text message from this sender
-                        store_attribute(text)
-                        sys.stderr.write('store_attribute ' + text + '\n')
-                        ask_next_question()
+                    text = event['message']['text']
+                    sendTextMessage(SENDER_ID, text + ' received, Thank you!')
+                    # Handle a text message from this sender
+                    store_attribute(text)
+                    sys.stderr.write('store_attribute ' + text + '\n')
+                    ask_next_question()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         app.logger.error(traceback.print_exception(exc_type, exc_value, exc_traceback, limit=2))
         return 'Error, wrong validation token'
 
 def store_attribute(text):
-    if CURRENT_ATTRIBUTE is not None:
-        USER_PROFILE[CURRENT_ATTRIBUTE] = text
+    USER_PROFILE[CURRENT_ATTRIBUTE] = text
     sys.stderr.write(str(USER_PROFILE) + '\n')
 
 def ask_next_question():
