@@ -41,12 +41,13 @@ def validate():
             sys.stderr.write(str(messaging_events) + '\n')
             for event in messages:
                 if (event.get('message') and event['message']['text']):
-                    text = event['message']['text']
-                    sendTextMessage(SENDER_ID, text + ' received, Thank you!')
-                    # Handle a text message from this sender
-                    store_attribute(text)
-                    sys.stderr.write('store_attribute ' + text + '\n')
-                    ask_next_question()
+                    if event['message'].get('mid') is None:
+                        text = event['message']['text']
+                        sendTextMessage(SENDER_ID, text + ' received, Thank you!')
+                        # Handle a text message from this sender
+                        store_attribute(text)
+                        sys.stderr.write('store_attribute ' + text + '\n')
+                        ask_next_question()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         app.logger.error(traceback.print_exception(exc_type, exc_value, exc_traceback, limit=2))
@@ -82,7 +83,7 @@ def fill_queue():
 def main():
     fill_queue()
     attribute, question = question_queue.get()
-    ask_next_question(
+    ask_question(
         attribute,
         question,
         SENDER_ID,
