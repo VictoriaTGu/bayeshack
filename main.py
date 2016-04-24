@@ -61,6 +61,7 @@ def ask_next_question():
     if question_queue.empty():
         sys.stderr.write('question queue empty\n')
         return
+    global question_queue
     attribute, question = question_queue.get()
     global CURRENT_ATTRIBUTE
     CURRENT_ATTRIBUTE=attribute
@@ -73,15 +74,15 @@ def ask_next_question():
         USER_PROFILE
     )
 
-def fill_queue():
-    global question_queue
+def fill_queue(queue):
     for attribute, question in reversed(QUESTIONS):
-        question_queue.put((attribute,question))
+        queue.put((attribute,question))
+    return queue
 
 
 def main():
     global question_queue
-    fill_queue()
+    question_queue = fill_queue()
     attribute, question = question_queue.get()
     ask_question(
         attribute,
